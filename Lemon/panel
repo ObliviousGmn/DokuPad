@@ -1,0 +1,101 @@
+#!/bin/sh
+# ObliviousGmn, May 2020
+# https://github.com/ObliviousGmn
+# Panel for Lemonbar ..
+# Updated to be more resource friendly
+
+. $HOME/Gmnbox/Panel/bar_config
+
+ ws(){ # Current Workspace .. 
+  ws=`xprop -root _NET_CURRENT_DESKTOP | awk '{printf $3}'`
+	case ${ws} in
+		0) echo " ";;
+		1) echo " ";;
+		2) echo " ";;
+		3) echo " ";;
+		*) echo " ";;
+	esac
+}
+
+ weather(){ # Weather Check ..
+ raincheck=`Weather2 10039`
+	echo "%{B$BBLUE}%{F$BG}  ${raincheck} %{B-}%{F-}"
+}
+
+ temp(){ # CPUs temp ..
+  temp=`sensors | awk '/Core 0/ {print +$3}'`
+	echo "%{F$BBLUE}  %{F-} ${temp}°"
+}
+	
+ battery(){ # Battery Percentage ..
+  plug=`acpi | awk '/Battery 0:/ {printf $3}' | tr -d ','`
+  batt=`acpi | awk '/Battery 0:/ {printf $4}' | sed s/,//g`
+
+  if [ "$plug" = "Charging" ]; then
+	echo "%{F$BBLUE}  %{F-} Charging @ ${batt}"
+  else
+	echo "%{F$BBLUE}  %{F-} ${batt}"
+  fi
+}
+
+ clock(){ # Clock, obv ..
+  clock=`date "+%b %d %Y %I:%M"`
+	echo "%{F$BBLUE}  %{F-} ${clock}"
+}
+
+ vol(){ # Volume, ..
+  switch=`amixer get Master | awk '/Mono:/ {printf $6}'`
+  vol=`amixer get Master | awk '/Mono:/ {printf $4}' | tr -d '[]%,'`
+
+  if [ "$switch" = "[on]" ]; then
+	echo "%{F$BBLUE}  %{F-} ${vol}"
+  else
+	echo "%{F$RED}  %{F-} MUTE"
+  fi
+}
+
+ mus(){ # Current song ..
+  mus=`mpc current -f %title%`
+
+  if [[ $mus ]]; then
+ 	echo "%{F$BBLUE}  %{F-} ${mus}"
+  fi
+}
+
+ last(){ # Weechat, Last highlight ..
+  last=`(tail -n1) <$HOME/Gmnbox/Panel/Weelog`
+
+  if [[ $last ]]; then
+  	echo "%{A:cat /dev/null > $HOME/Gmnbox/Panel/Weelog:}${last}%{A}"
+  fi
+}
+
+ net(){ # Connected or nah? ..
+  ping=`ping 8.8.8.8 -c 1 | awk '/rtt/ {printf("%d\n",$4 + 0.5)}'`
+  test -n "${ping}" && echo "%{F$BBLUE}  %{F-} Connected" || echo "%{F$RED}  %{F-} No Connection"
+}
+
+while :; do
+
+ # Run Network Chk in intervals ..
+ [[ pong -eq 90 ]] && pong=0
+ [[ pong -eq 0 ]] && ping=$(net)
+ pong=$(( pong + 1 ))
+ 
+ # Run Weather in intervals ..
+ [[ umbrella -eq 3600 ]] && umbrella=0
+ [[ umbrella -eq 0 ]] && wet=$(weather)
+ umbrella=$(( umbrella + 1 ))
+
+ # Run Battery Check in intervals ..
+ [[ electro -eq 300 ]] && electro=0
+ [[ electro -eq 0 ]] && zap=$(battery)
+ electro=$(( electro +1 ))
+
+
+	echo "  $(ws) $wet $(vol) %{r}$(temp) $zap $ping $(clock)  "
+         sleep 1 	
+		 
+ done | lemonbar -g ${PW}x${PH}+${PO}+${PO} -f "$FONT1" -f "$ICON2" -B "$BG" -F "$BYELLOW" -d -p | \
+	while read line; do eval "$line"; done &
+
