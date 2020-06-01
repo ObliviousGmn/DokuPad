@@ -1,0 +1,135 @@
+#!/bin/bash
+
+# Obliviousgmn, May 2020
+# https://github.com/ObliviousGmn
+# Backup - Dropbox - Usb 
+
+clear
+. Colors 
+
+# Variables 
+BKDIR="Backup"
+BKUP="Backup_$(date +%m_%Y).tar"
+DROPOFF1="$HOME/Dropbox/Backups"
+DROPOFF2="$HOME/.usbstick/Backups"
+USBSTK="$HOME/.usbstick"
+
+# Prints Filename & Date
+printf " ${Green}${0##*/} %85s $(date +%I:%M)${Reset} \n\n"
+
+# Pretty Magical Progress Bar
+progress(){
+	for ((i = 0; i < $1; i++)); do printf "${Black}.${Reset}"; sleep 0.02; \
+		done; printf " ${Blue}[${Reset} COMPLETE ${Blue}]${Reset} \n" ;
+}
+
+MKDIRS(){
+  printf "  Organizing Files "
+  mkdir $BKDIR
+  mkdir $BKDIR/Home
+  mkdir $BKDIR/Config
+#  mkdir $BKDIR/Gitpacs
+  mkdir $BKDIR/Ncmpcpp
+  mkdir $BKDIR/Root
+#  mkdir $BKDIR/Weechat
+#  mkdir $BKDIR/Torrent
+#  mkdir $BKDIR/Netctl
+#  mkdir $BKDIR/Pacman
+#  mkdir $BKDIR/2bwm
+
+  cp $HOME/.xinitrc $BKDIR/Home
+  cp $HOME/.Xdefaults $BKDIR/Home
+  cp $HOME/.bashrc $BKDIR/Home
+  cp $HOME/.vimrc $BKDIR/Home
+  cp $HOME/.vim/colors/Reborn.vim $BKDIR/Home
+
+  cp -ar $HOME/.fonts $BKDIR/Home
+  
+  cp /etc/hosts.local $BKDIR/Root
+#  cp /etc/netctl/Gmnbox $BKDIR/Netctl
+  cp /etc/pacman.conf $BKDIR/Pacman
+
+  cp -ar $HOME/Gmnbox $BKDIR
+  cp -ar $HOME/.Gitpacs $BKDIR
+#  cp -ar $HOME/.config/luakit $BKDIR/Config
+  cp -ar $HOME/.config/ranger $BKDIR/Config
+#  cp -ar $HOME/.config/htop $BKDIR/Config
+  cp -ar $HOME/.config/sxhkd $BKDIR/Config
+
+  cp $HOME/.ncmpcpp/config $BKDIR/Ncmpcpp
+  cp $HOME/.config/mpd/mpd.conf $BKDIR/Ncmpcpp
+  cp -ar $HOME/Radio $BKDIR/Ncmpcpp
+  
+#  cp $HOME/.weechat/weechat.conf $BKDIR/Weechat
+#  cp $HOME/.weechat/irc.conf $BKDIR/Weechat
+#  cp $HOME/.weechat/trigger.conf $BKDIR/Weechat
+  
+#  cp $HOME/.Source/2bwm/config.h $BKDIR/2bwm 
+#  cp $HOME/.local/share/luakit/bookmarks.db $BKDIR/Config/luakit
+#  cp $HOME/.config/transmission-daemon/settings.json $BKDIR/Torrent
+  progress 66
+}
+
+MKPKG(){
+  printf "  Zipping Folder "
+  tar cf $BKUP $BKDIR;
+  progress 68
+}
+
+USBCHK(){
+ if [ $(mount | grep -c ${USBSTK}) != 1 ]; then
+   printf "  Not mounted "
+   echo
+   echo
+   exit 0 
+ fi	   
+}
+
+DROPCHK(){
+ drop=$(dropbox-cli status)
+ if [[ $drop = "Dropbox isn't running!" ]]; then
+   printf " Dropbox isn't running "
+   echo
+   echo
+   exit 0
+ fi
+}
+
+DROPDB(){
+  printf "  Cleaning up "
+  mv $BKUP $DROPOFF1
+  rm -r $BKDIR
+  progress 71
+  echo
+}
+
+DROPUSB(){
+  printf "  Cleaning up "
+  mv $BKUP $DROPOFF2
+  rm -rf $BKDIR
+  progress 71
+  echo
+}
+
+USAGE(){
+  echo " Backup -u Usb -d Dropbox  "
+  echo
+}
+
+case $1 in
+
+  -u|usb|USB) 
+	USBCHK
+	MKDIRS
+	MKPKG 
+	DROPUSB ;;
+
+  -d|dropbox) 
+	DROPCHK  
+	MKDIRS
+    MKPKG
+	DROPDB ;;
+
+  *) 
+	USAGE ;;
+esac

@@ -1,0 +1,48 @@
+#!/bin/sh
+
+clear
+Gmnbox
+. Colors
+
+kernel=$(uname -rmo)
+cpuspe=$(grep 'model name' /proc/cpuinfo| sed 1q|sed 's/^.*:\ *//')
+
+system=$(cat /etc/os-release | sed '2,$d;s/NAME="//;s/"//')
+
+if [ -n "$DISPLAY" ]; then
+    wmname=$(xprop -root _NET_WM_NAME|cut -d\" -f2)
+    termfn=$(cat $HOME/.Xdefaults | grep -v ! | awk '/*font/ {print $2}' | sed 's/xft://;s/:pixelsize//;s/=/\ /')
+    systfn=$(sed -n 's/^[gtk].*font.*"\(.*\)".*$/\1/p' ~/.gtkrc-2.0)
+else
+    wmname="none"
+    termfn="none"
+    systfn="none"
+fi
+wmname="2bwm"
+
+pkgnum=$(pacman -Q|wc -l)
+birthd=$(sed -n '1s/^\[\([0-9-]*\).*$/\1/p' /var/log/pacman.log | tr - .)
+
+gitdir="github.com/ObliviousGmn"
+myblog="/dev/null"
+
+cat << EOF
+
+  ${Black}▉▉ | ${BWhite}OS ${BBlack}........... $White$system
+  ${BBlack} ▉▉| ${BWhite}Name ${BBlack}......... $White$HOSTNAME
+  ${Red}▉▉ | ${BWhite}Birth day${BBlack}..... $White$birthd
+  ${BRed} ▉▉| ${BWhite}Packages ${BBlack}..... $White$pkgnum
+  ${Green}▉▉ |
+  ${BGreen} ▉▉| ${BWhite}WM ${BBlack}........... $White$wmname
+  ${Yellow}▉▉ | ${BWhite}Shell ${BBlack}........ $White$SHELL
+  ${BYellow} ▉▉| ${BWhite}Terminal ${BBlack}..... $White$TERM
+  ${Blue}▉▉ | ${BWhite}Term Font ${BBlack}.... $White$termfn
+  ${BBlue} ▉▉| ${BWhite}System Font ${BBlack}.. $White$systfn
+  ${Purple}▉▉ |
+  ${BPurple} ▉▉| ${BWhite}Kernel ${BBlack}....... $White$kernel
+  ${Cyan}▉▉ | ${BWhite}Processor ${BBlack}.... $White$cpuspe
+  ${BCyan} ▉▉|
+  ${White}▉▉ | ${BWhite}Website ${BBlack}...... $White$myblog
+  ${BWhite} ▉▉| ${BWhite}Github ${BBlack}....... $White$gitdir
+
+EOF

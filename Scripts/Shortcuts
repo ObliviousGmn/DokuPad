@@ -1,0 +1,79 @@
+#!/bin/sh
+
+# ObliviousGmn, May 2020
+# https://github.com/ObliviousGmn
+# Functions - Don't judge me
+
+conf() { # Forever Growing.. 
+ case $1 in
+    
+	poly)			$EDITOR $HOME/.config/polybar/config ;;
+	bspwm)			$EDITOR $HOME/.config/bspwm/bspwmrc ;;
+    color)          $EDITOR $HOME/Gmnbox/Colors/$2  ;;
+	panel)	        $EDITOR $HOME/Gmnbox/Panel/panel ;;
+	bar)			$EDITOR $HOME/Gmnbox/Panel/bar_config ;;
+	hostupd)	    $EDITOR $HOME/Gmnbox/Bin/Hostupd ;;
+	backup)		    $EDITOR $HOME/Gmnbox/Bin/Backup ;;
+	pop)			$EDITOR $HOME/Gmnbox/Bin/Lemonpop ;;
+	alert)		    $EDITOR $HOME/Gmnbox/Bin/Alertpp ;;
+	temp)		    $EDITOR $HOME/Gmnbox/Bin/Template ;;
+	lock)			$EDITOR $HOME/Gmnbox/Bin/Lockscreen ;;
+	head)			$EDITOR $HOME/Gmnbox/Bin/Gmnbox ;;
+	alias)			$EDITOR $HOME/Gmnbox/Bin/alias ;;
+	this)			$EDITOR $HOME/Gmnbox/Bin/Shortcuts ;;
+	hotkeys)  	    $EDITOR $HOME/.config/sxhkd/sxhkdrc ;;
+	bashrc)			$EDITOR $HOME/.bashrc ;;
+	xd)	  	        $EDITOR $HOME/.Xdefaults ;;
+	start)			$EDITOR $HOME/.xinitrc ;;
+	2b)				$EDITOR $HOME/.Source/2bwm/config.h ;;
+	bin)			$EDITOR $HOME/Gmnbox/Bin/$2 ;;
+	*)				echo "No config by that name" ;;
+
+ esac
+}
+
+Peek(){ # Read stuff	
+ command cat $1 | less
+}
+
+Showkey(){ # Too lazy to type all this..	
+ command xev | grep -A2 --line-buffered '^KeyRelease' | sed -n '/keycode /s/^.*keycode \([0-9]*\).* (.*, \(.*\)).*$/\1 \2/p'
+}
+
+Headset(){ # Switch headset for default
+ case $1 in
+   on)
+   cat <<EOF1 > $HOME/.asoundrc
+    defaults.pcm.card 1
+    defaults.pcm.device 0
+    defaults.ctl.card 1
+EOF1
+;;
+
+  off)
+  cat <<EOF2 > $HOME/.asoundrc
+   defaults.pcm.card 0
+   defaults.pcm.device 0
+   defaults.ctl.card 0
+EOF2
+;;
+
+esac
+}
+
+Record(){ # Record desktop ..
+if [ -z $1 ]; then
+   echo " Video needs a title. "
+else
+   ffmpeg -f x11grab -s 1920x1080 -r 30 -i :0.0 -q:v 0 -vcodec huffyuv $HOME/.tmp/$1.mkv
+   ffmpeg -threads 4 -i $HOME/.tmp/$1.mkv -crf 10 -b:v 3M $HOME/.tmp/$1.webm
+fi
+}
+
+Gitupd(){ # For dotfiles ..
+  git add *
+  git commit -m "`date +'%b %d %Y'`"
+  sleep 2
+  git push -u origin master
+}
+

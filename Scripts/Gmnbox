@@ -1,0 +1,19 @@
+#!/bin/sh
+
+# ObliviousGmn, May 2020
+# https://github.com/ObliviousGmn
+# Header for my Terminal.. 
+
+. Colors
+ttysize=`stty size | awk '{print$2}'`
+HN=`hostname | wc -m`
+RN="$(whoami | sed -e 's/\b\(.\)/\u\1/g')"
+US=$(( $ttysize + $HN - 28 ))
+
+if [ $(id -u) -eq 0 ];
+then
+	printf "${Green}${RN} %${US}s $(date +%I:%M)${Reset} \n"
+else
+	printf "${Green}$(hostname) ${Black}>> %${US}s << ${Green}$(date +%I:%M)${Reset}\n\n"
+fi
+

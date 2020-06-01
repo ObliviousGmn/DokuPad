@@ -1,0 +1,52 @@
+#!/bin/sh
+
+# ObliviousGmn, April 2015
+# https://github.com/ObliviousGmn
+# Someonewhocares Hostfile..
+
+# Check for hosts.local
+if [ ! -f /etc/hosts.local ]; then
+ echo
+ echo "You need to create /etc/hosts.local"
+ echo "Don't worry is only a copy of your existing hosts"
+ echo
+ 	cp /etc/hosts /etc/hosts.local
+ echo	
+ echo "Okay, Did it for you.. You owe me, Run this again."
+ echo
+ exit 0
+fi
+
+# Need Root access 
+if [[ $EUID -ne 0 ]]; then
+   echo
+   echo "  Nah, Run on Root.." 1>&2
+   echo
+   exit 1
+fi
+
+. Colors
+clear
+
+# Prints Filename & Time
+printf " ${Red}${0##*/} %84s $(date +%I:%M)${Reset} \n\n" 
+
+# Useless magic trick
+progress () {
+	 for ((i = 0; i < $1; i++)); do printf "${Black}.${Reset}"; sleep 0.02; \
+	 done; printf " ${Blue}[${Reset} COMPLETE ${Blue}]${Reset} \n" ;
+}
+
+# Getting the Hostfile
+ printf "  Downloading Hosts " 
+ wget -c -O /tmp/hosts.txt http://someonewhocares.org/hosts/zero/hosts &>/dev/null
+ progress 65
+
+# Making it pretty 
+ printf "  Making Hosts "
+ cat /etc/hosts.local > /etc/hosts
+ cat /tmp/hosts.txt | tr -d "\r" >> /etc/hosts
+ rm /tmp/hosts*.txt
+ progress 70
+ echo
+

@@ -1,0 +1,11 @@
+#!/bin/sh
+# ObliviousGmn, May 2020
+# https://github.com/ObliviousGmn
+# Making Dmenu Fancy (Need lineheight & xym Patches!)
+
+. $HOME/Gmnbox/Panel/bar_config
+. $HOME/.cache/wal/colors.sh 
+
+dmenu_run -nb "$background" -nf "$foreground" -sf "$background" -sb "$foreground" \
+  -fn "$termfont2" -h ${PH} -x ${PO} -y 8 -w ${PW}
+

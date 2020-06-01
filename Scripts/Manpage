@@ -1,0 +1,16 @@
+#!/bin/bash
+# ObliviousGmn, June 2014
+# Master Settings 
+# ManPage 
+
+man() {
+	env \
+		LESS_TERMCAP_mb=$(printf "${Blue}") \
+		LESS_TERMCAP_md=$(printf "${Blue}") \
+		LESS_TERMCAP_me=$(printf "${Reset}") \
+		LESS_TERMCAP_se=$(printf "${Reset}") \
+		LESS_TERMCAP_so=$(printf "$Black") \
+		LESS_TERMCAP_ue=$(printf "${Reset}") \
+		LESS_TERMCAP_us=$(printf "${Red}") \
+			man "$@"
+}

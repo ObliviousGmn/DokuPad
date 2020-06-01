@@ -1,0 +1,16 @@
+#!/bin/sh
+#AccuWeather (r) RSS weather tool for conky
+#USAGE: weather.sh <locationcode>
+#(c) Michael Seiler 2007
+
+# 0 for Farenheight, 1 for Celcius
+METRIC=0 
+
+if [ -z $1 ]; then
+    echo
+    echo "USAGE: weather.sh <locationcode>"
+    echo
+    exit 0;
+fi
+
+curl -s http://rss.accuweather.com/rss/liveweather_rss.asp\?metric\=${METRIC}\&locCode\=$1 | awk /Currently:/ | sed 's/Currently: //g; s/title//g; s/F//g' | tr -d '<>:/' 

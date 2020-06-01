@@ -1,0 +1,93 @@
+#!/bin/sh
+# ObliviousGmn. May 2020
+# https://github.com/ObliviousGmn
+# Dependicies: i3lock-colors Wmctrl xdotool Scrot xrandr imagemagick - Lockscreen  
+
+# Images ..
+Active="/tmp/Active.png"
+Static="/tmp/Static.png"
+Center="-gravity center -composite -matte"
+Pixel="-scale 10% -scale 1000%"
+Badge="$HOME/Wallpaper/Misc/Tinalock.png"
+
+# Screen Height & Width ..
+SW=`xrandr | grep current | awk '{print $8}'`
+SH=`xrandr | grep current | awk '{print $10}' | tr -d ','`
+
+# Ring Position ..
+Rx=$(( $SW - 1880 ))
+Ry=$(( $SH - 40 ))
+
+# Colors .. 
+Key="d23c3dff"
+Bshl="d23c3dff"
+Sepa="00000000"
+
+Inside="373445ff"
+InsideV="fecf4dff"
+InsideW="d23c3dff"
+
+Ring="ffffffff"
+RingV="ffffffff"
+RingW="ffffffff"
+
+# Ring settings ..
+Rings="--insidecolor=$Inside --ringcolor=$Ring --line-uses-inside \
+    --keyhlcolor=$Key --bshlcolor=$Bshl --separatorcolor=$Sepa \
+    --insidevercolor=$InsideV --insidewrongcolor=$InsideW \
+    --ringvercolor=$RingV --ringwrongcolor=$RingW --indpos="x+${Rx}:y+${Ry}" \
+    --radius=12 --veriftext="" --wrongtext="" "
+
+active(){
+# Active Setup ..
+
+  	scrot -q 1 -z $Active
+	convert $Active $Pixel $Active
+
+  [ -f $CenterIMG ]
+	convert $Active $Badge $Center $Active
+
+	i3lock -n -i $Active $Rings
+	rm $Active
+	exit 0
+}
+
+static(){
+# Static setup, Shifts to a empty window and hides bar ..
+
+  if [ -f $Static ]; then
+  	echo
+  else
+	xdotool search --class bar windowunmap 
+	wmctrl -s 3 
+	scrot -q 1 -z $Static
+	convert $Static $Pixel $Static
+    xdotool search --class bar windowmap
+	wmctrl -s 0
+	
+  [[ -f $CenterIMG ]]
+	convert $Static $Badge $Center $Static
+  fi
+	i3lock -n -i $Static $Rings
+	exit 0
+}
+
+remove(){
+# Remove Static .. 
+
+	rm $Static
+}
+
+usage(){
+	echo
+	echo " Lockscreen [ Active -a | Static -s | Clear -c ] "
+	echo
+}
+
+case $1 in
+	-h) usage ;;
+	-a) active ;;
+	-s) static ;;
+	-c) remove ;;
+esac
+

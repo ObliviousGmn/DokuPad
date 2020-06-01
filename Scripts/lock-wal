@@ -1,0 +1,96 @@
+#!/bin/sh
+# ObliviousGmn. May 2020
+# https://github.com/ObliviousGmn
+# Dependicies: i3lock-colors wmctrl xdotool scrot xrandr imagemagick
+
+# Source pywal colors ..
+. "$HOME/.cache/wal/colors.sh"
+
+# Images ..
+Busy="/tmp/Busy.png"
+Clean="/tmp/Clean.png"
+Badge="$HOME/Wallpaper/Misc/Tinalock.png"
+
+# Image magic ..
+Center="-gravity center -composite -matte"
+Pixel="-scale 10% -scale 1000%"
+
+# Screen Height & Width ..
+SW=`xrandr | grep current | awk '{print $8}'`
+SH=`xrandr | grep current | awk '{print $10}' | tr -d ','`
+
+# Ring Position ..
+Rx=$(( $SW - 1880 ))
+Ry=$(( $SH - 40 ))
+
+# Colors .. 
+alpha="ff"
+beta="00"
+
+Key="$background$alpha"
+Bshl="$foreground$alpha"
+Sepa="$background$alpha"
+
+Inside="$background$alpha"
+InsideV="$foreground$alpha"
+InsideW="$color8$alpha"
+
+Ring="$foreground$alpha"
+RingV="$foreground$beta"
+RingW="$foreground$beta"
+
+Rad="12"
+
+# Ring settings ..
+Rings="--insidecolor=$Inside --ringcolor=$Ring --line-uses-inside \
+    --keyhlcolor=$Key --bshlcolor=$Bshl --separatorcolor=$Sepa \
+    --insidevercolor=$InsideV --insidewrongcolor=$InsideW \
+    --ringvercolor=$RingV --ringwrongcolor=$RingW --indpos="x+${Rx}:y+${Ry}" \
+    --radius=$Rad --veriftext="" --wrongtext="" "
+
+Busy(){
+# Busy Setup ..
+
+  	scrot -q 1 -z $Busy
+	convert $Busy $Pixel $Busy
+
+  [ -f $CenterIMG ]
+	convert $Busy $Badge $Center $Busy
+
+	i3lock -n -i $Busy $Rings
+	rm $Busy
+	exit 0
+}
+
+Clean(){
+# Clean setup, Shifts to a empty window and hides bar ..
+
+  if [ -f $Clean ]; then
+  	echo
+  else
+	xdotool search --class bar windowunmap 
+	wmctrl -s 3 
+	scrot -q 1 -z $Clean
+	convert $Clean $Pixel $Clean
+    xdotool search --class bar windowmap
+	wmctrl -s 0
+	
+  [[ -f $CenterIMG ]]
+	convert $Clean $Badge $Center $Clean
+  fi
+	i3lock -n -i $Clean $Rings
+	exit 0
+}
+
+remove(){
+# Remove Clean .. 
+
+	rm $Clean
+}
+
+case $1 in
+	-b) Busy ;;
+	-c) Clean ;;
+	-rm) remove ;;
+esac
+

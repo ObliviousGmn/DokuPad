@@ -1,0 +1,30 @@
+#!/bin/sh
+
+# ObliviousGmn, April 2015
+# https://github.com/ObliviousGmn
+# Screenshot popup 
+
+. $HOME/Gmnbox/Panel/bar_config
+
+popup(){ # Fancy pop for screenshot .. 
+aplay -q $HOME/Gmnbox/Sounds/camera.wav &
+scrot -d 1 -z -t 15 -q 100 '/home/doku/Wallpaper/Screens/%m_%d_%Y.png'\
+       	| Lemonpop -s Screenshot ..
+}
+
+nopop(){ # Kinda use it to make wallpapers .. 
+  wmctrl -s 9 # Switch to unused desktop
+  pkill lemonbar
+  sleep 1
+  scrot -q 100 '/home/doku/Wallpaper/%m_%d_%Y.png'
+  sleep 2
+  sh $HOME/Gmnbox/Panel/panel
+  wmctrl -s 0 # swtich back to root desktop
+}
+
+case $1 in 
+	
+	1) nopop ;;
+	*) popup ;;
+	
+esac

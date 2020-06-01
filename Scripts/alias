@@ -1,0 +1,85 @@
+#!/bin/bash
+# ObliviousGmn, May 2020
+# https://github.com/ObliviousGmn 
+# Alias - Very Sloppy -Will Update
+
+# Mirrors -- In Root Only
+ alias Rankup='sudo rankmirrors -n 6 /etc/pacman.d/mirrorlist.backup > /etc/pacman.d/mirrorlist'
+ alias Rankedit='sudo vim /etc/pacman.d/mirrorlist.backup'
+
+# Pacman
+ alias Pacman='sudo pacman -S'
+ alias Paclook='sudo pacman -Ss'
+ alias Pacrm='sudo pacman -Rcns'
+ alias Pacupd='sudo pacman -Syyu'
+ alias Pacsync='sudo pacman -Syy'
+ alias Pacinfo='sudo pacman -Qi'
+
+# Aur  
+ alias Yay='yay -s'
+ alias Yaylook='yay -Ss'
+
+# Dotfiles
+ alias Dots='cd $HOME/.Dotfiles && clear'
+ alias Gadd='git add *'
+ alias Gmit='git commit -m'
+ alias Gpush='git push -u origin master'
+ alias Gpull='git pull'
+
+# Configs
+ alias ls='ls --color=auto'
+ alias clear='clear && Gmnbox'
+ alias rm='rm -i'
+
+# Custom
+ alias Headphones='amixer set Line\ Out toggle'
+
+# Games
+# alias Terror='xrandr --output VGA1 --mode 640x480; urbanterror'
+# alias Setgame='xrandr --output VGA1 --mode 640x480'
+
+# System
+ alias svim='sudo vim'
+ alias Copy='xclip -selection clipboard'
+ alias Yoump3='youtube-dl --extract-audio --audio-format mp3'
+ alias Panelrst='pkill lemonbar; sh $HOME/Gmnbox/Panel/panel'
+
+# Usb
+ alias Usbup='sudo mount -o gid=users,uid=doku,fmask=113,dmask=002 /dev/sdb1 .usbstick'
+ alias Usbdown='sudo umount /dev/sdb1'
+
+# Toilet
+ alias 2023='toilet -f future'
+ alias gaym='toilet --gay -f mono9 -t'
+ alias gayf='toilet --gay -f future -t'
+ alias gayt='toilet --gay -f term -t'
+ alias gayp='toilet --gay -f pagga -t'
+ alias metm='toilet --metal -f mono9 -t'
+ alias metf='toilet --metal -f future -t'
+ alias mett='toilet --metal -f term -t'
+ alias metp='toilet --metal -f pagga -t'
+ alias 3d='figlet -f 3d'
+
+# Plex
+ alias Plex='sudo systemctl start plexmediaserver'
+ alias Plexrst='sudo systemctl restart plexmediaserver'
+ alias Plexstop='sudo systemctl stop plexmediaserver'
+
+# -- Plex library refresh
+ alias Plex-refresh-Movies='curl http://localhost:32400/library/sections/8/refresh '
+ alias Plex-refresh-TV='curl http://localhost:32400/library/sections/5/refresh '
+
+# Dropbox
+ alias Dbstart='dropbox-cli start'
+ alias Dbstatus='dropbox-cli status'
+
+# Transmission
+ alias Tranrst='sudo systemctl restart transmission'
+ alias Transtop='sudo systemctl stop transmission'
+ alias Transtart='sudo systemctl start transmission'
+# -- 
+ alias Pirate='transmission-remote-cli'
+
+ alias WALL='wal -i $HOME/Wallpaper/$2'
+
+# End

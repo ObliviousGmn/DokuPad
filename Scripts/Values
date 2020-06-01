@@ -1,0 +1,25 @@
+#!/bin/bash
+# To see color values
+
+
+clear
+strip=" - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - "
+
+Gmnbox
+
+colors=( $( sed -re '/^!/d; /^$/d; /^#/d; s/(\*color)([0-9]):/\10\2:/g;' \
+	$HOME/Gmnbox/Colors/$1 | grep 'color[01][0-9]:' | sort | sed  's/^.*: *//g' ) )
+
+echo -e "\e[1;37m
+  Color & Values
+ ${strip}\e[0m"
+for i in {0..7}; 
+do 
+	printf "  \e[$((30+$i))m${colors[i]} \e[0m"; 
+done
+	echo
+for i in {8..15}; 
+do  
+	printf "  \e[1;$((22+$i))m${colors[i]} \e[0m"; 
+done
+echo -e "\n"

@@ -1,0 +1,41 @@
+#! /bin/sh
+#ObliviousGmn, May 2020
+
+. "$HOME/.cache/wal/colors.sh"
+
+# Start Ups ..
+killall -p polybar
+polybar simple &
+sxhkd &
+
+# Workstations ..
+bspc monitor -d 1 2 3 4
+
+# Configs ..
+bspc config border_width         2
+bspc config window_gap           8
+bspc config split_ratio          0.52
+bspc config borderless_monocle  true
+bspc config gapless_monocle     true
+bspc config top_padding			 40
+bspc config focus_follows_pointer true
+
+# Colors ..
+bspc config normal_border_color $background
+bspc config focused_border_color $foreground
+
+# Windows Rules .. 
+
+# Terminal Station ..
+#bspc -a URxvt state=tiled
+
+# GTK Station ..
+# bspc rule -a Gcolor2 desktop='^2' follow=on
+bspc rule -a Xfd desktop='^2' follow=on
+
+# Web Station ..
+bspc rule -a Google-chrome desktop='^3' follow=on
+
+# Image Station .. 
+bspc rule -a feh desktop='^4' state=tiled follow=on
+

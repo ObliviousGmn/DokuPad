@@ -1,0 +1,39 @@
+#!/bin/sh
+
+# ObliviousGmn, April 2015
+# https://github.com/ObliviousGmn
+# Template - Pretty tasks 
+
+. Colors
+clear
+
+# Magic 
+ttysize=`stty size | awk '{print$2}'`
+Space=$(( $ttysize - 17 ))
+Snake=$(( $ttysize - 32 ))
+
+# Filename & Date
+printf " ${Red}${0##*/} %${Space}s $(date +%I:%M)${Reset} \n\n"
+
+# Useless magic trick
+progress () {
+	for ((i = 0; i < $1; i++)); do printf "${Black}.${Reset}"; sleep 0.02; \
+	done; printf " ${Blue}[${Reset} COMPLETE ${Blue}]${Reset} \n" ;
+}
+
+error () {
+	for ((i = 0; i < $1; i++)); do printf "${Black}.${Reset}"; sleep 0.06; \
+	done; printf " ${Red}[${Reset} ERROR ${Red}]${Reset} \n" ; sleep 0.06 
+	aplay -q $HOME/Gmnbox/Sounds/opps.wav # Optional
+}
+
+# Testing Complete here..
+printf "  Dude okay, Nice "
+progress ${Snake}
+
+# Testing Error here..
+printf "  Hacking your mom "
+error 12
+echo
+
+

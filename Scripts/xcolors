@@ -1,0 +1,42 @@
+#!/bin/bash
+
+# ObliviousGmn, April 2015
+# https://github.com/ObliviousGmn
+# Xcolors - ???
+
+[[ -z "$2" ]] && exit
+
+CC='color'
+
+case $2 in
+	bla|black)   CC="${CC}0" ;;
+	red)         CC="${CC}1" ;;
+	gre|green)   CC="${CC}2" ;;
+	yel|yellow)  CC="${CC}3" ;;
+	blu|blue)    CC="${CC}4" ;;
+	mag|magenta) CC="${CC}5" ;;
+	cya|cyan)    CC="${CC}6" ;;
+	whi|white)   CC="${CC}7" ;;
+
+	bbla|boldblack)   CC="${CC}8" ;;
+	bred|boldred)     CC="${CC}9" ;;
+	bgre|boldgreen)   CC="${CC}10" ;;
+	byel|boldyellow)  CC="${CC}11" ;;
+	bblu|boldblue)    CC="${CC}12" ;;
+	bmag|boldmagenta) CC="${CC}13" ;;
+	bcya|boldcyan)    CC="${CC}14" ;;
+	bwhi|boldwhite)   CC="${CC}15" ;;
+
+	bg|background) CC='background' ;;
+	fg|foreground) CC='foreground' ;;
+
+	it|italic)     CC="${CC}IT" ;;
+	ul|underline)  CC="${CC}UL" ;;
+
+	*)
+		echo 'invalid color id'
+		exit ;;
+esac
+
+cat $HOME/Gmnbox/Colors/$1 | grep $CC | tail -c 8 
+# change to 7 if you want color without #
