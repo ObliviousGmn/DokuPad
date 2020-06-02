@@ -1,0 +1,19 @@
+# ObliviousGmn. May 2020
+# https://github.com/ObliviousGmn
+# Xdefaults 
+ 
+#include "/home/doku/Gmnbox/Colors/gintage"
+ Xft.autohint: 0
+ Xft.antialias: true
+
+ *font: 			xft:mononoki Nerd Font
+ *boldFont: 		xft:mononoki Nerd Font
+ *scrollBar:    	false
+ *geometry:   	    100x10
+ *cursorBlink: 		true
+ *cursorUnderline:  true
+ *internalBorder:   10
+ *perl-ext-common:  default,matcher
+ *url-launcher:     /usr/bin/qutebrowser
+ *matcher.button:   1
+
