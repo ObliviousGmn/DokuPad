@@ -6,8 +6,8 @@
  Xft.autohint: 0
  Xft.antialias: true
 
- *font: 			xft:mononoki Nerd Font
- *boldFont: 		xft:mononoki Nerd Font
+ *font: 			xft:mononoki Nerd Font:pixelsize=14
+ *boldFont: 		xft:mononoki Nerd Font:pixelsize=14
  *scrollBar:    	false
  *geometry:   	    100x10
  *cursorBlink: 		true
